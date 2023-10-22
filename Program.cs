@@ -6,6 +6,7 @@ class Program
     public static void Main()
     {
         const string pathBackgroundTexture = "./assets/back.png";
+        const string pathCrateTexture = "./assets/crate.png";
 
         const int SCREEN_WIDTH = 1024;
         const int SCREEN_HEIGHT = 1024;
@@ -44,6 +45,7 @@ class Program
 
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
         Texture2D background = Raylib.LoadTexture(pathBackgroundTexture);
+        Texture2D crate = Raylib.LoadTexture(pathCrateTexture);
 
         while (!Raylib.WindowShouldClose())
         {
@@ -87,8 +89,15 @@ class Program
 
                 if (Raylib.CheckCollisionPointRec(mousePos + target, r))
                 {
-                    Raylib.DrawRectangle((int)r.x, (int)r.y, (int)r.width, (int)r.height, Color.PURPLE);
-                    Raylib.DrawRectangleLinesEx(r, 2, Color.WHITE);
+                    Raylib.DrawTexturePro(
+                        crate,
+                        new Rectangle(0, 0, crate.width, crate.height),
+                        r,
+                        new Vector2(0, 0),
+                        0,
+                        Color.WHITE);
+
+                    Raylib.DrawRectangleLinesEx(r, 1, Color.WHITE);
                 }
             }
 
