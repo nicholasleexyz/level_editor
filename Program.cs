@@ -11,8 +11,6 @@ class Program
         const int HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
         const int CELL_SIZE = 64;
 
-        var xOffset = HALF_SCREEN_WIDTH - (CELL_SIZE * 9 * 0.5f);
-        var yOffset = HALF_SCREEN_HEIGHT - (CELL_SIZE * 9 * 0.5f);
 
         Vector2 mousePos;
         Vector2 target = Vector2.Zero;
@@ -20,18 +18,39 @@ class Program
 
         float camMoveSpeed = 400f;
 
-        Rectangle[] cells = new Rectangle[81];
+        const int rows = 20;
+        const int columns = 40;
+        const int totalCellCount = rows * columns;
 
-        for (int i = 0; i < 81; i++)
+        var xOffset = HALF_SCREEN_WIDTH - (CELL_SIZE * columns * 0.5f);
+        var yOffset = HALF_SCREEN_HEIGHT - (CELL_SIZE * rows * 0.5f);
+
+        Rectangle[] cells = new Rectangle[totalCellCount];
+
+        for (int j = 0; j < rows; j++)
         {
-            float gap = 0;
-            float x = CELL_SIZE * (i % 9) + gap * (i % 9) + xOffset;
-            float y = CELL_SIZE * (i / 9) + gap * (i / 9) + yOffset;
-            float width = CELL_SIZE;
-            float height = CELL_SIZE;
+            for (int i = 0; i < columns; i++)
+            {
+                float gap = 0;
+                float x = CELL_SIZE * i + gap * i + xOffset;
+                float y = CELL_SIZE * j + gap * j + yOffset;
+                float width = CELL_SIZE;
+                float height = CELL_SIZE;
 
-            cells[i] = new Rectangle(x, y, width, height);
+                cells[j * columns + i] = new Rectangle(x, y, width, height);
+            }
         }
+
+        // for (int i = 0; i < totalCellCount; i++)
+        // {
+        //     float gap = 0;
+        //     float x = CELL_SIZE * (i % columns) + gap * (i % columns) + xOffset;
+        //     float y = CELL_SIZE * (i / rows) + gap * (i / rows) + yOffset;
+        //     float width = CELL_SIZE;
+        //     float height = CELL_SIZE;
+
+        //     cells[i / rows + i%columns] = new Rectangle(x, y, width, height);
+        // }
 
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
 
@@ -67,14 +86,14 @@ class Program
             {
                 Raylib.DrawRectangleLinesEx(r, 2, Color.DARKBLUE);
 
-                if (Raylib.CheckCollisionPointRec(mousePos+target, r))
+                if (Raylib.CheckCollisionPointRec(mousePos + target, r))
                 {
                     Raylib.DrawRectangle((int)r.x, (int)r.y, (int)r.width, (int)r.height, Color.PURPLE);
                     Raylib.DrawRectangleLinesEx(r, 2, Color.WHITE);
                 }
             }
 
-            Raylib.DrawFPS(10+(int)(target.X), 10+(int)target.Y);
+            Raylib.DrawFPS(10 + (int)(target.X), 10 + (int)target.Y);
             Raylib.EndMode2D();
 
             Raylib.EndDrawing();
