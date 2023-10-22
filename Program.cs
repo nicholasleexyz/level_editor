@@ -5,12 +5,13 @@ class Program
 {
     public static void Main()
     {
+        const string pathBackgroundTexture = "./assets/back.png";
+
         const int SCREEN_WIDTH = 1024;
         const int SCREEN_HEIGHT = 1024;
         const int HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
         const int HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
         const int CELL_SIZE = 64;
-
 
         Vector2 mousePos;
         Vector2 target = Vector2.Zero;
@@ -41,18 +42,8 @@ class Program
             }
         }
 
-        // for (int i = 0; i < totalCellCount; i++)
-        // {
-        //     float gap = 0;
-        //     float x = CELL_SIZE * (i % columns) + gap * (i % columns) + xOffset;
-        //     float y = CELL_SIZE * (i / rows) + gap * (i / rows) + yOffset;
-        //     float width = CELL_SIZE;
-        //     float height = CELL_SIZE;
-
-        //     cells[i / rows + i%columns] = new Rectangle(x, y, width, height);
-        // }
-
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
+        Texture2D background = Raylib.LoadTexture(pathBackgroundTexture);
 
         while (!Raylib.WindowShouldClose())
         {
@@ -81,6 +72,14 @@ class Program
             Raylib.ClearBackground(Color.GRAY);
 
             Raylib.BeginMode2D(cam);
+
+            Raylib.DrawTexturePro(
+                background,
+                new Rectangle(0, 0, background.width, background.height),
+                new Rectangle(target.X, target.Y, SCREEN_WIDTH, SCREEN_HEIGHT),
+                Vector2.Zero,
+                0,
+                Color.WHITE);
 
             foreach (var r in cells)
             {
