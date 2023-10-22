@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "RIRfeR1FNxf/Wq371tTyn1RvHBLyTGq6i5bzN/q0Na2X8DtQegokkzA0hva46Sgio+Dk036II/vraCNxEuXX5Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Nickh\\Desktop\\level_editor\\level_editor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nickh\\.nuget\\packages\\raylib-cs\\4.5.0.4\\raylib-cs.4.5.0.4.nupkg.sha512",
+    "C:\\Users\\Nickh\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
