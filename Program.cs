@@ -119,7 +119,9 @@ class Program
                 Color exColorHover,
                 Action onClick)
             {
-                var btnRec = new Rectangle(x, y, width, height);
+                int _x = x + (int)target.X;
+                int _y = y + (int)target.Y;
+                var btnRec = new Rectangle(_x, _y, width, height);
                 var btnCol = bgColor;
                 var btnExCol = exColor;
 
@@ -133,12 +135,11 @@ class Program
                     }
                 }
 
-                Raylib.DrawRectangle(x, y, width, height, btnCol);
+                Raylib.DrawRectangle(_x, _y, width, height, btnCol);
                 Raylib.DrawRectangleLinesEx(btnRec, 2, btnExCol);
 
-                //magic numbers used here :p
-                var textX = (width + x) / 2 - (text.Length * 8);
-                var textY = (height + y) / 2 - 12;
+                var textX = _x + (width / 4);
+                var textY = _y + (height / 4);
 
                 Raylib.DrawText(text, textX, textY, 32, Color.BLACK);
             }
@@ -147,8 +148,7 @@ class Program
 
             btn("qeoirwqre", 10, 10, 300, 50, Color.BLUE, Color.DARKBLUE, Color.GREEN, Color.WHITE, _onClick);
 
-
-            Raylib.DrawFPS(10 + (int)(target.X), 10 + (int)target.Y);
+            Raylib.DrawFPS(Raylib.GetScreenWidth() - 100 + (int)(target.X), 10 + (int)target.Y);
             Raylib.EndMode2D();
 
             Raylib.EndDrawing();
