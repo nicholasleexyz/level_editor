@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using Raylib_cs;
 
 class Program
@@ -49,6 +50,7 @@ class Program
 
         while (!Raylib.WindowShouldClose())
         {
+
             mousePos = Raylib.GetMousePosition();
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
@@ -75,6 +77,7 @@ class Program
 
             Raylib.BeginMode2D(cam);
 
+            // draw background
             Raylib.DrawTexturePro(
                 background,
                 new Rectangle(0, 0, background.width, background.height),
@@ -89,6 +92,7 @@ class Program
 
                 if (Raylib.CheckCollisionPointRec(mousePos + target, r))
                 {
+                    // Draw crate
                     Raylib.DrawTexturePro(
                         crate,
                         new Rectangle(0, 0, crate.width, crate.height),
@@ -97,9 +101,51 @@ class Program
                         0,
                         Color.WHITE);
 
+                    // crate outline
                     Raylib.DrawRectangleLinesEx(r, 1, Color.WHITE);
                 }
             }
+
+
+            void btn(
+                int x,
+                int y,
+                int width,
+                int height,
+                Color bgColor,
+                Color exColor,
+                Color bgColorHover,
+                Color exColorHover,
+                Action onClick)
+            {
+                var btnRec = new Rectangle(x, y, width, height);
+                var btnCol = bgColor;
+                var btnExCol = exColor;
+
+                if (Raylib.CheckCollisionPointRec(mousePos + target, btnRec))
+                {
+                    btnCol = bgColorHover;
+                    btnExCol = exColorHover;
+                    if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+                    {
+                        onClick();
+                    }
+                }
+
+                Raylib.DrawRectangle(x, y, width, height, btnCol);
+                Raylib.DrawRectangleLinesEx(btnRec, 2, btnExCol);
+
+                //magic numbers used here :p
+                var textX = (width + x) / 2 - (4 * 16);
+                var textY = (height + y) / 2 - 24;
+
+                Raylib.DrawText("asdf", textX, textY, 64, Color.BLACK);
+            }
+
+            var _onClick = () => Console.WriteLine("test");
+
+            btn(10, 10, 300, 100, Color.BLUE, Color.DARKBLUE, Color.GREEN, Color.WHITE, _onClick);
+
 
             Raylib.DrawFPS(10 + (int)(target.X), 10 + (int)target.Y);
             Raylib.EndMode2D();
@@ -107,6 +153,8 @@ class Program
             Raylib.EndDrawing();
         }
 
+        Raylib.UnloadTexture(background);
+        Raylib.UnloadTexture(crate);
         Raylib.CloseWindow();
     }
 }
