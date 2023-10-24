@@ -108,6 +108,7 @@ class Program
 
 
             void btn(
+                string text,
                 int x,
                 int y,
                 int width,
@@ -136,15 +137,15 @@ class Program
                 Raylib.DrawRectangleLinesEx(btnRec, 2, btnExCol);
 
                 //magic numbers used here :p
-                var textX = (width + x) / 2 - (4 * 16);
-                var textY = (height + y) / 2 - 24;
+                var textX = (width + x) / 2 - (text.Length * 8);
+                var textY = (height + y) / 2 - 12;
 
-                Raylib.DrawText("asdf", textX, textY, 64, Color.BLACK);
+                Raylib.DrawText(text, textX, textY, 32, Color.BLACK);
             }
 
             var _onClick = () => Console.WriteLine("test");
 
-            btn(10, 10, 300, 100, Color.BLUE, Color.DARKBLUE, Color.GREEN, Color.WHITE, _onClick);
+            btn("qeoirwqre", 10, 10, 300, 50, Color.BLUE, Color.DARKBLUE, Color.GREEN, Color.WHITE, _onClick);
 
 
             Raylib.DrawFPS(10 + (int)(target.X), 10 + (int)target.Y);
