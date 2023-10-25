@@ -21,14 +21,6 @@ class Program
         const int HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
         const int CELL_SIZE = 64;
 
-        Dictionary<TextureType, string> texurePaths = new() {
-            {TextureType.Background, "./assets/back.png"},
-            {TextureType.Block, "./assets/block.png"},
-            {TextureType.Crate, "./assets/crate.png"},
-            {TextureType.Face, "./assets/face.png"},
-            {TextureType.Rock, "./assets/rock.png"},
-        };
-
         Vector2 mousePos;
         Vector2 target = Vector2.Zero;
         Camera2D cam = new Camera2D(Vector2.Zero, target, 0, 1f);
@@ -59,8 +51,20 @@ class Program
         }
 
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
-        Texture2D background = Raylib.LoadTexture(texurePaths[TextureType.Background]);
-        Texture2D crate = Raylib.LoadTexture(texurePaths[TextureType.Crate]);
+
+        string GetTexturePath(TextureType textureType) =>
+            textureType switch
+            {
+                TextureType.Background => "./assets/back.png",
+                TextureType.Block => "./assets/block.png",
+                TextureType.Crate => "./assets/crate.png",
+                TextureType.Face => "./assets/face.png",
+                TextureType.Rock => "./assets/rock.png",
+                _ => "",
+            };
+
+        Texture2D background = Raylib.LoadTexture(GetTexturePath(TextureType.Background));
+        Texture2D crate = Raylib.LoadTexture(GetTexturePath(TextureType.Crate));
 
         /* CAMERA MOVEMENT INPUT*/
         var camMovInputOptions = new KeyboardKey[4] { KeyboardKey.KEY_W, KeyboardKey.KEY_A, KeyboardKey.KEY_S, KeyboardKey.KEY_D, };
