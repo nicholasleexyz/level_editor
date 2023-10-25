@@ -52,16 +52,15 @@ class Program
 
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
 
-        string GetTexturePath(TextureType textureType) =>
-            textureType switch
-            {
-                TextureType.Background => "./assets/back.png",
-                TextureType.Block => "./assets/block.png",
-                TextureType.Crate => "./assets/crate.png",
-                TextureType.Face => "./assets/face.png",
-                TextureType.Rock => "./assets/rock.png",
-                _ => "",
-            };
+        string GetTexturePath(TextureType textureType) => textureType switch
+        {
+            TextureType.Background => "./assets/back.png",
+            TextureType.Block => "./assets/block.png",
+            TextureType.Crate => "./assets/crate.png",
+            TextureType.Face => "./assets/face.png",
+            TextureType.Rock => "./assets/rock.png",
+            _ => throw new ArgumentOutOfRangeException(nameof(textureType), $"Not expected texture type: {textureType}"),
+        };
 
         Texture2D background = Raylib.LoadTexture(GetTexturePath(TextureType.Background));
         Texture2D crate = Raylib.LoadTexture(GetTexturePath(TextureType.Crate));
