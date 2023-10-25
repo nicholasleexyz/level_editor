@@ -1,18 +1,33 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 
+
 class Program
 {
+    enum TextureType
+    {
+        Background,
+        Block,
+        Crate,
+        Face,
+        Rock
+    }
+
     public static void Main()
     {
-        const string pathBackgroundTexture = "./assets/back.png";
-        const string pathCrateTexture = "./assets/crate.png";
-
         const int SCREEN_WIDTH = 1024;
         const int SCREEN_HEIGHT = 1024;
         const int HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
         const int HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
         const int CELL_SIZE = 64;
+
+        Dictionary<TextureType, string> texurePaths = new() {
+            {TextureType.Background, "./assets/back.png"},
+            {TextureType.Block, "./assets/block.png"},
+            {TextureType.Crate, "./assets/crate.png"},
+            {TextureType.Face, "./assets/face.png"},
+            {TextureType.Rock, "./assets/rock.png"},
+        };
 
         Vector2 mousePos;
         Vector2 target = Vector2.Zero;
@@ -44,8 +59,8 @@ class Program
         }
 
         Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Level Editor");
-        Texture2D background = Raylib.LoadTexture(pathBackgroundTexture);
-        Texture2D crate = Raylib.LoadTexture(pathCrateTexture);
+        Texture2D background = Raylib.LoadTexture(texurePaths[TextureType.Background]);
+        Texture2D crate = Raylib.LoadTexture(texurePaths[TextureType.Crate]);
 
         /* CAMERA MOVEMENT INPUT*/
         var camMovInputOptions = new KeyboardKey[4] { KeyboardKey.KEY_W, KeyboardKey.KEY_A, KeyboardKey.KEY_S, KeyboardKey.KEY_D, };
@@ -114,6 +129,8 @@ class Program
             /*UI*/
             var _onClick = () => Console.WriteLine("test");
             UI.btn(target, mousePos, "qeoirwqre", 10, 10, 300, 50, _onClick);
+            UI.btn(target, mousePos, "qeoirwqre", 10, 60, 300, 50, _onClick);
+            UI.btn(target, mousePos, "qeoirwqre", 10, 110, 300, 50, _onClick);
 
             Raylib.DrawFPS(Raylib.GetScreenWidth() - 100 + (int)(target.X), 10 + (int)target.Y);
             /*END UI*/
@@ -162,5 +179,4 @@ public static class UI
 
         Raylib.DrawText(text, textX, textY, 32, Color.BLACK);
     }
-
 }
