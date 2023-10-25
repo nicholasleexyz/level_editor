@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Runtime.InteropServices;
 using Raylib_cs;
 
 class Program
@@ -21,8 +20,8 @@ class Program
 
         float camMoveSpeed = 400f;
 
-        const int rows = 20;
-        const int columns = 40;
+        const int rows = 10;
+        const int columns = 12;
         const int totalCellCount = rows * columns;
 
         var xOffset = HALF_SCREEN_WIDTH - (CELL_SIZE * columns * 0.5f);
@@ -48,36 +47,39 @@ class Program
         Texture2D background = Raylib.LoadTexture(pathBackgroundTexture);
         Texture2D crate = Raylib.LoadTexture(pathCrateTexture);
 
+        /* CAMERA MOVEMENT INPUT*/
+        var camMovInputOptions = new KeyboardKey[4] { KeyboardKey.KEY_W, KeyboardKey.KEY_A, KeyboardKey.KEY_S, KeyboardKey.KEY_D, };
+
+        Vector2 GetCamMoveSpeed(KeyboardKey key) =>
+            key switch
+            {
+                KeyboardKey.KEY_W => new Vector2(0, -camMoveSpeed * Raylib.GetFrameTime()),
+                KeyboardKey.KEY_A => new Vector2(-camMoveSpeed * Raylib.GetFrameTime(), 0),
+                KeyboardKey.KEY_S => new Vector2(0, camMoveSpeed * Raylib.GetFrameTime()),
+                KeyboardKey.KEY_D => new Vector2(camMoveSpeed * Raylib.GetFrameTime(), 0),
+                _ => Vector2.Zero,
+            };
+        /* END CAMERA MOVEMENT INPUT*/
+
         while (!Raylib.WindowShouldClose())
         {
-
             mousePos = Raylib.GetMousePosition();
 
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            {
-                target += new Vector2(camMoveSpeed * Raylib.GetFrameTime(), 0);
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            {
-                target -= new Vector2(camMoveSpeed * Raylib.GetFrameTime(), 0);
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
-            {
-                target -= new Vector2(0, camMoveSpeed * Raylib.GetFrameTime());
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
-            {
-                target += new Vector2(0, camMoveSpeed * Raylib.GetFrameTime());
-            }
+            /* CAMERA MOVEMENT*/
+            foreach (var input in camMovInputOptions)
+                if (Raylib.IsKeyDown(input))
+                    target += GetCamMoveSpeed(input);
 
             cam.target = target;
+            /* END CAMERA MOVEMENT*/
 
+            /*Grapics*/
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.GRAY);
 
             Raylib.BeginMode2D(cam);
 
-            // draw background
+            /* DRAW BAKCGROUND */
             Raylib.DrawTexturePro(
                 background,
                 new Rectangle(0, 0, background.width, background.height),
@@ -85,7 +87,9 @@ class Program
                 Vector2.Zero,
                 0,
                 Color.WHITE);
+            /* END DRAW BAKCGROUND */
 
+            /* DRAW GRID */
             foreach (var r in cells)
             {
                 Raylib.DrawRectangleLinesEx(r, 2, Color.DARKBLUE);
@@ -105,57 +109,58 @@ class Program
                     Raylib.DrawRectangleLinesEx(r, 1, Color.WHITE);
                 }
             }
+            /* END DRAW GRID */
 
-
-            void btn(
-                string text,
-                int x,
-                int y,
-                int width,
-                int height,
-                Color bgColor,
-                Color exColor,
-                Color bgColorHover,
-                Color exColorHover,
-                Action onClick)
-            {
-                int _x = x + (int)target.X;
-                int _y = y + (int)target.Y;
-                var btnRec = new Rectangle(_x, _y, width, height);
-                var btnCol = bgColor;
-                var btnExCol = exColor;
-
-                if (Raylib.CheckCollisionPointRec(mousePos + target, btnRec))
-                {
-                    btnCol = bgColorHover;
-                    btnExCol = exColorHover;
-                    if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
-                    {
-                        onClick();
-                    }
-                }
-
-                Raylib.DrawRectangle(_x, _y, width, height, btnCol);
-                Raylib.DrawRectangleLinesEx(btnRec, 2, btnExCol);
-
-                var textX = _x + (width / 4);
-                var textY = _y + (height / 4);
-
-                Raylib.DrawText(text, textX, textY, 32, Color.BLACK);
-            }
-
+            /*UI*/
             var _onClick = () => Console.WriteLine("test");
-
-            btn("qeoirwqre", 10, 10, 300, 50, Color.BLUE, Color.DARKBLUE, Color.GREEN, Color.WHITE, _onClick);
+            UI.btn(target, mousePos, "qeoirwqre", 10, 10, 300, 50, _onClick);
 
             Raylib.DrawFPS(Raylib.GetScreenWidth() - 100 + (int)(target.X), 10 + (int)target.Y);
-            Raylib.EndMode2D();
+            /*END UI*/
 
+            Raylib.EndMode2D();
             Raylib.EndDrawing();
+            /*End Grapics*/
         }
 
         Raylib.UnloadTexture(background);
         Raylib.UnloadTexture(crate);
         Raylib.CloseWindow();
     }
+}
+
+public static class UI
+{
+    public static void btn(Vector2 target, Vector2 mousePos, string text, int x, int y, int width, int height, Action onClick)
+    {
+        Color bgColor = Color.BLUE;
+        Color exColor = Color.DARKBLUE;
+        Color bgColorHover = Color.GREEN;
+        Color exColorHover = Color.DARKGREEN;
+
+        int _x = x + (int)target.X;
+        int _y = y + (int)target.Y;
+        var btnRec = new Rectangle(_x, _y, width, height);
+        var btnCol = bgColor;
+        var btnExCol = exColor;
+
+        if (Raylib.CheckCollisionPointRec(mousePos + target, btnRec))
+        {
+            btnCol = bgColorHover;
+            btnExCol = exColorHover;
+            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+            {
+                onClick();
+            }
+        }
+
+        Raylib.DrawRectangle(_x, _y, width, height, btnCol);
+        Raylib.DrawRectangleLinesEx(btnRec, 2, btnExCol);
+
+        var textX = _x + (width / 4);
+        var textY = _y + (height / 4);
+
+        Raylib.DrawText(text, textX, textY, 32, Color.BLACK);
+    }
+
 }
